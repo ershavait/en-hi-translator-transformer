@@ -8,6 +8,14 @@
 
 ---
 
+## Demo
+
+![Translation Demo](demo.png)
+
+> "India is a great country" → "भारत एक महान देश है।"
+
+---
+
 ## What is this
 
 A full encoder-decoder Transformer for English→Hindi translation, trained from scratch on the IITB English-Hindi dataset. Every component — multi-head attention, positional encoding, the whole thing — written in raw PyTorch. No pretrained models, no shortcuts.
@@ -78,7 +86,7 @@ cd en-hi-translator-transformer
 pip install -r requirements.txt
 ```
 
-That's literally it. The 787 MB weights download **automatically** on first run from Google Drive. You don't touch anything.
+The 787 MB weights download **automatically** on first run from Google Drive. You don't touch anything.
 
 > Need ~1 GB free disk space. The weights land in `cfilt/iitb-english-hindi_weights/`.
 
@@ -142,22 +150,6 @@ Too big for GitHub (787 MB), hosted on Google Drive:
 ```
 
 **GET** `/api/health` — check if model is loaded and which device it's on.
-
----
-
-## Requirements
-
-```
-torch
-sentencepiece
-datasets
-flask
-flask-cors
-torchmetrics
-tensorboard
-tqdm
-gdown
-```
 
 ---
 
