@@ -9,7 +9,7 @@ from dataset import causal_mask
 # ─────────────────────────────────────────────
 #  GDrive folder ID (extracted from share link)
 # ─────────────────────────────────────────────
-GDRIVE_FOLDER_ID = "1Q9jO0l9Kl1ikzI1aCIjxqrTWTgwSLcW3"
+GDRIVE_FOLDER_ID = "1X-k8_PB3zi18dzfx4h2-F6KzWE8gITYd"
 
 
 def download_weights_if_needed(config):

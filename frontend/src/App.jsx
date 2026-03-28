@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const API_URL = 'http://localhost:5000/api/translate';
+const API_URL = `${window.location.protocol}//${window.location.hostname}:5500/api/translate`;
 
 export default function App() {
   const [inputText, setInputText] = useState('');
