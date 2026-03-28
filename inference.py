@@ -6,6 +6,55 @@ from config import get_config, latest_weights_file_path
 from dataset import causal_mask
 
 
+# ─────────────────────────────────────────────
+#  GDrive folder ID (extracted from share link)
+# ─────────────────────────────────────────────
+GDRIVE_FOLDER_ID = "1Q9jO0l9Kl1ikzI1aCIjxqrTWTgwSLcW3"
+
+
+def download_weights_if_needed(config):
+    """
+    If no .pt weights exist locally, download the latest one
+    from the shared Google Drive folder using gdown.
+    """
+    model_folder = f"{config['datasource']}_{config['model_folder']}"
+    Path(model_folder).mkdir(parents=True, exist_ok=True)
+
+    existing = list(Path(model_folder).glob(f"{config['model_basename']}*.pt"))
+    if existing:
+        print(f"[Weights] Found local weights: {sorted(existing)[-1]}")
+        return  # already have weights, skip download
+
+    try:
+        import gdown
+    except ImportError:
+        raise ImportError(
+            "gdown is required to download weights.\n"
+            "Install it with: pip install gdown"
+        )
+
+    print("[Weights] No local weights found. Downloading from Google Drive...")
+    print(f"[Weights] Folder ID: {GDRIVE_FOLDER_ID}")
+
+    # Download all .pt files from the folder
+    gdown.download_folder(
+        id=GDRIVE_FOLDER_ID,
+        output=model_folder,
+        quiet=False,
+        use_cookies=False,
+    )
+
+    # Verify download succeeded
+    downloaded = list(Path(model_folder).glob(f"{config['model_basename']}*.pt"))
+    if not downloaded:
+        raise FileNotFoundError(
+            "Download completed but no .pt files found.\n"
+            "Check that the GDrive folder is shared as 'Anyone with the link'."
+        )
+
+    print(f"[Weights] Downloaded: {[str(f) for f in sorted(downloaded)]}")
+
+
 def load_tokenizer(config, lang):
     model_path = config['tokenizer_file'].format(lang) + '.model'
     if not Path(model_path).exists():
@@ -19,6 +68,9 @@ def load_tokenizer(config, lang):
 
 
 def load_model(config, tokenizer_src, tokenizer_tgt, device):
+    # Auto-download weights if missing
+    download_weights_if_needed(config)
+
     model = build_transformer(
         tokenizer_src.get_piece_size(),
         tokenizer_tgt.get_piece_size(),
@@ -30,11 +82,10 @@ def load_model(config, tokenizer_src, tokenizer_tgt, device):
     model_path = latest_weights_file_path(config)
     if model_path is None:
         raise FileNotFoundError(
-            "No saved model weights found.\n"
-            "Please train the model first using train.py."
+            "No saved model weights found even after download attempt."
         )
 
-    print(f"Loading model weights from: {model_path}")
+    print(f"[Model] Loading weights from: {model_path}")
     state = torch.load(model_path, map_location=device)
     model.load_state_dict(state['model_state_dict'])
     model.eval()
@@ -64,7 +115,7 @@ def translate(sentence: str, model, tokenizer_src, tokenizer_tgt, config, device
         torch.tensor([pad_id] * num_padding,   dtype=torch.int64),
     ], dim=0).unsqueeze(0).to(device)   # (1, seq_len)
 
-    encoder_mask = (encoder_input != pad_id).unsqueeze(0).unsqueeze(0).int().to(device)  # (1,1,1,seq_len)
+    encoder_mask = (encoder_input != pad_id).unsqueeze(0).unsqueeze(0).int().to(device)
 
     # Greedy decode
     sos_idx = tokenizer_tgt.bos_id()
@@ -105,7 +156,6 @@ def translate(sentence: str, model, tokenizer_src, tokenizer_tgt, config, device
 
 
 def main():
-    # ── Setup ────────────────────────────────
     config = get_config()
 
     device = torch.device(
@@ -115,7 +165,6 @@ def main():
     )
     print(f"Using device: {device}")
 
-    # ── Load tokenizers & model ───────────────
     print("Loading tokenizers ...")
     tokenizer_src = load_tokenizer(config, config['lang_src'])
     tokenizer_tgt = load_tokenizer(config, config['lang_tgt'])
@@ -128,7 +177,6 @@ def main():
     print("  Type 'quit' or 'exit' to stop")
     print("="*50 + "\n")
 
-    # ── Interactive loop ──────────────────────
     while True:
         try:
             sentence = input("Enter English sentence: ").strip()
