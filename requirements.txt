@@ -1,0 +1,10 @@
+torch
+os
+sentencepiece
+datasets
+flask
+flask-cors
+torchmetrics
+tensorboard
+tqdm
+gdown
