@@ -1,6 +1,6 @@
 # 🔤➡️🔤 English → Hindi Neural Machine Translator
 
-> Built a Transformer from scratch. No HuggingFace shortcuts. Just math, pain, and a L4 GPU at 2am.
+> Built a Transformer from scratch. No HuggingFace shortcuts. 
 
 [![GitHub](https://img.shields.io/badge/GitHub-ershavait-black?logo=github)](https://github.com/ershavait/en-hi-translator-transformer)
 [![Model Weights](https://img.shields.io/badge/Weights-Google%20Drive-blue?logo=googledrive)](https://drive.google.com/drive/folders/1X-k8_PB3zi18dzfx4h2-F6KzWE8gITYd?usp=sharing)
