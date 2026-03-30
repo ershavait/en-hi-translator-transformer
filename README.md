@@ -27,7 +27,7 @@ Trained for 20 epochs on Lightning AI with a T4 GPU. 787 MB of weights sitting o
 ## How it actually works
 
 ```
-"Hello, how are you?"
+"India is a great country"
         ↓
    SentencePiece BPE tokenizer (16K vocab)
         ↓
@@ -51,7 +51,7 @@ Trained for 20 epochs on Lightning AI with a T4 GPU. 787 MB of weights sitting o
                   ↓
          greedy decode token by token
                   ↓
-        "नमस्ते, आप कैसे हैं?"
+        "भारत एक महान देश है।"
 ```
 
 The decoder generates one token at a time, each time attending back to the full encoder output. Classic autoregressive greedy decoding.
@@ -131,7 +131,7 @@ Too big for GitHub (787 MB), hosted on Google Drive:
 | Batch size | 32 |
 | Optimizer | Adam (lr=1e-4, eps=1e-9) |
 | Loss | CrossEntropy + label smoothing 0.1 |
-| Hardware | Lightning AI T4 GPU |
+| Hardware | Lightning AI L4 GPU |
 
 ---
 
