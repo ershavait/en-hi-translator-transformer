@@ -88,7 +88,7 @@ pip install -r requirements.txt
 
 The 787 MB weights download **automatically** on first run from Google Drive. You don't touch anything.
 
-> Need ~1 GB free disk space. The weights land in `cfilt/iitb-english-hindi_weights/`.
+> Need ~1 GB free disk space The weights land in `cfilt/iitb-english-hindi_weights/`.
 
 ---
 
